@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Resume Assistant Chrome Extension",
+  "description": "A Chrome extension to help build resumes with AI",
+  "version": "1.0",
+  "action": {
+    "default_popup": "index.html"
+  },
+  "permissions": ["scripting", "activeTab", "tabs"]
+}
