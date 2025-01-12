@@ -16,13 +16,6 @@ export const validateEmail = (email: string): string | null => {
   return null;
 };
 
-export const validatePhone = (phone: string): string | null => {
-  const phoneRegex = /^\d{10}$/;
-  if (!phone.trim()) return 'Phone number is required.';
-  if (!phoneRegex.test(phone)) return 'Phone number must be exactly 10 digits.';
-  return null;
-};
-
 export const validateAdditionalInfo = (
   additionalInfo: string
 ): string | null => {
@@ -38,7 +31,6 @@ export const validateForm = (
   return {
     fullName: validateFullName(formData.fullName),
     email: validateEmail(formData.email),
-    phone: validatePhone(formData.phone),
     additionalInfo: validateAdditionalInfo(formData.additionalInfo),
   };
 };

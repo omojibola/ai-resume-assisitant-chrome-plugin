@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { validateForm, ValidationErrors } from '@/utils/validations';
 import WarningBanner from '@/components/shared/WarningBanner';
 import { isJobBoardPage } from '@/utils/isValidJobPage';
+import { generateCv } from '@/utils/generateCv';
 
 const MainPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -24,8 +25,14 @@ const MainPage: React.FC = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const isValidJobApplicationPage = await isJobBoardPage();
+    setIsJobPage(isValidJobApplicationPage);
+    if (!isValidJobApplicationPage) {
+      return;
+    }
 
     const validationErrors = validateForm(formData);
     setErrors(validationErrors);
@@ -34,19 +41,10 @@ const MainPage: React.FC = () => {
       (error) => error !== null
     );
     if (hasErrors) {
-      console.log('Form contains errors:', validationErrors);
       return;
     }
 
-    console.log('Form submitted successfully:', formData);
-  };
-
-  const generateCv = async () => {
-    const isValidJobApplicationPage = await isJobBoardPage();
-    setIsJobPage(isValidJobApplicationPage);
-    if (!isValidJobApplicationPage) {
-      return;
-    }
+    await generateCv(formData);
   };
 
   return (
@@ -66,6 +64,7 @@ const MainPage: React.FC = () => {
             placeholder='Enter your full name'
             value={formData.fullName}
             onChange={handleChange}
+            className='mt-1'
           />
           {errors.fullName && (
             <p className='text-red-500 text-sm'>{errors.fullName}</p>
@@ -80,6 +79,7 @@ const MainPage: React.FC = () => {
             placeholder='Enter your email'
             value={formData.email}
             onChange={handleChange}
+            className='mt-1'
           />
           {errors.email && (
             <p className='text-red-500 text-sm'>{errors.email}</p>
@@ -94,17 +94,15 @@ const MainPage: React.FC = () => {
             placeholder='Enter your phone number'
             value={formData.phone}
             onChange={handleChange}
+            className='mt-1'
           />
-          {errors.phone && (
-            <p className='text-red-500 text-sm'>{errors.phone}</p>
-          )}
         </div>
         <div>
           <Label htmlFor='additionalInfo'>Additional Information</Label>
           <textarea
             id='additionalInfo'
             name='additionalInfo'
-            className='w-full px-3 py-2 border rounded'
+            className='w-full px-3 py-2 border rounded mt-1'
             placeholder='Enter additional details'
             value={formData.additionalInfo}
             onChange={handleChange}
@@ -113,7 +111,7 @@ const MainPage: React.FC = () => {
             <p className='text-red-500 text-sm'>{errors.additionalInfo}</p>
           )}
         </div>
-        <Button type='submit' className='w-full' onClick={generateCv}>
+        <Button type='submit' className='w-full'>
           Generate CV
         </Button>
       </form>
